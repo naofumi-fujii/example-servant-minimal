@@ -13,34 +13,32 @@ import           Network.Wai.Handler.Warp
 import           Servant
 import           System.IO
 
--- * api
-
-type ItemApi =
-  "item" :> Get '[JSON] [Item] :<|>
-  "item" :> Capture "itemId" Integer :> Get '[JSON] Item
-
 itemApi :: Proxy ItemApi
 itemApi = Proxy
 
--- * app
+mkApp :: IO Application
+mkApp = return $ serve itemApi server
 
 run :: IO ()
 run = do
   let port = 3000
       settings =
         setPort port $
-        setBeforeMainLoop (hPutStrLn stderr ("listening on port " ++ show port)) $
+        setBeforeMainLoop (hPutStrLn stderr ("listening on port " ++ show port))
         defaultSettings
   runSettings settings =<< mkApp
 
-mkApp :: IO Application
-mkApp = return $ serve itemApi server
+{-routes-}
+type ItemApi =
+  "items" :> Get '[JSON] [Item] :<|>
+  "items" :> Capture "itemId" Integer :> Get '[JSON] Item
 
 server :: Server ItemApi
 server =
   getItems :<|>
   getItemById
 
+{-controllers-}
 getItems :: Handler [Item]
 getItems = return [exampleItem]
 
@@ -52,8 +50,7 @@ getItemById = \ case
 exampleItem :: Item
 exampleItem = Item 0 "example item"
 
--- * item
-
+{-models-}
 data Item
   = Item {
     itemId :: Integer,
@@ -63,7 +60,3 @@ data Item
 
 instance ToJSON Item
 instance FromJSON Item
-
-data a + b = Foo a b
-
-type X = Int + Bool
