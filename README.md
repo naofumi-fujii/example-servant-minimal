@@ -1,3 +1,4 @@
+
 This is a very minimal example of a project that uses
 
 - `servant` to specify a REST API,
