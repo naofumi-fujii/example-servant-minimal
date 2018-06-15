@@ -28,6 +28,9 @@ run = do
         defaultSettings
   runSettings settings =<< mkApp
 
+
+{-your code goes below here-}
+
 {-routes-}
 type ItemApi =
   "items" :> Get '[JSON] [Item] :<|>
@@ -37,6 +40,7 @@ server :: Server ItemApi
 server =
   getItems :<|>
   getItemById
+
 
 {-controllers-}
 getItems :: Handler [Item]
@@ -49,6 +53,7 @@ getItemById = \ case
 
 exampleItem :: Item
 exampleItem = Item 0 "example item"
+
 
 {-models-}
 data Item
